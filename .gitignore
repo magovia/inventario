@@ -3,7 +3,7 @@
 # User-specific files
 *.xlsm
 *.csv
-
+*.laccdb
 # User-specific files ()
 
 # Mono auto generated files
