@@ -45,8 +45,8 @@ def parse_xml(file_path):
         resumenfc.drop(columns=['CodigoTipoMoneda'], inplace=True)
         
         # save DataFrame to a CSV file
-        resumenfc.to_csv('tblresumenfactura.csv', index=False) 
-    
+        #resumenfc.to_csv('tblresumenfactura.csv', index=False) 
+        resumenfc.to_excel('tblresumenfactura.xlsx', index=False) 
     #%%  
         emisor = data_dict['FacturaElectronica']['Emisor']
         dataEmisor = {
@@ -60,7 +60,9 @@ def parse_xml(file_path):
         # Create DataFrame
         tblProveedor = pd.DataFrame([dataEmisor])
         # Optionally, save DataFrame to a CSV file
-        tblProveedor.to_csv('proveedor.csv', index=False)  
+        #tblProveedor.to_csv('proveedor.csv', index=False) 
+        tblProveedor.to_excel('proveedor.xlsx', index=False) 
+        
      #%%  
         tblfactura = data_dict['FacturaElectronica']
         # type(factura)
@@ -80,7 +82,8 @@ def parse_xml(file_path):
         tblfactura = pd.DataFrame([fc])
     
         # Optionally, save DataFrame to a CSV file
-        tblfactura.to_csv('factura.csv', index=False)
+        #tblfactura.to_csv('factura.csv', index=False)
+        tblfactura.to_excel('factura.xlsx', index=False)
         
     #%%  
         # Extract the list of line items
@@ -150,7 +153,8 @@ def parse_xml(file_path):
                    lineaUnica['CodImpuesto', 'ImpuestoCodTarifa','ImpuestoPorcentaje','MontoImpuesto'] = pd.NA  # You can also use None if preferred
              
                 # Optionally, save DataFrame to a CSV file
-               lineaUnica.to_csv('linea_detalle_data.csv', index=False)
+               #lineaUnica.to_csv('linea_detalle_data.csv', index=False)
+               lineaUnica.to_excel('linea_detalle_data.xlsx', index=False)
                    
             elif isinstance(element, dict):
                 # print(f"Element at index {idx} is a dictionary: {element}")           
@@ -187,7 +191,8 @@ def parse_xml(file_path):
                 detalleLinea = pd.DataFrame(detalle)
                                         
                 # Optionally, save DataFrame to a CSV file
-                detalleLinea.to_csv('linea_detalle_data.csv', index=False)
+                #detalleLinea.to_csv('linea_detalle_data.csv', index=False)
+                detalleLinea.to_excel('linea_detalle_data.xlsx', index=False)
             else:
                 print(f"Element at index {idx} is of type {type(element)}: {element}")
          
