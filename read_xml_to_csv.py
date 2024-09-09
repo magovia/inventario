@@ -9,6 +9,7 @@ import xmltodict
 import pandas as pd
 import tkinter as tk
 from tkinter import filedialog
+import os
 
 #%%
 def open_file_dialog():
@@ -106,9 +107,12 @@ def parse_xml(file_path):
                
                
                #Eliminar columnas
+               #lineaUnica.drop(columns=['MontoTotalLinea'], inplace=True)
                lineaUnica.drop(columns=['CodigoComercial'], inplace=True)
-               lineaUnica.drop(columns=['ImpuestoNeto'], inplace=True)
-               lineaUnica.drop(columns=['MontoTotalLinea'], inplace=True)
+               
+               if 'ImpuestoNeto' in lineaUnica.columns:
+                   lineaUnica.drop(columns=['ImpuestoNeto'], inplace=True)
+               
                
                if 'UnidadMedidaComercial' not in lineaUnica.columns:
                    lineaUnica['UnidadMedidaComercial']=lineaUnica['UnidadMedida']
@@ -127,14 +131,14 @@ def parse_xml(file_path):
                    lineaUnica.drop(columns=['Descuento'], inplace=True)
                else:
                    # Add a 'Descuento' column with null values (using pd.NA or None)
-                   lineaUnica['Descuento'] = 0  # You can also use None if preferred
+                   lineaUnica['MontoDescuento'] = 0  # You can also use None if preferred
     
                if 'Impuesto' in lineaUnica.columns:
                    # Unpack the 'Descuento' column into two new columns
                    impuesto_df = lineaUnica['Impuesto'].apply(pd.Series)
               
                    # Rename columns if needed (optional, to match keys)
-                   impuesto_df.columns = ['CodImpuesto', 'ImpuestoCodTarifa','PorcentajeImpuesto','MontoImpuesto']
+                   impuesto_df.columns = ['CodImpuesto', 'ImpuestoCodTarifa','ImpuestoPorcentaje','MontoImpuesto']
                 
                    # Merge the unpacked columns into the original DataFrame
                    lineaUnica = pd.concat([lineaUnica, impuesto_df], axis=1)
@@ -143,7 +147,7 @@ def parse_xml(file_path):
                    lineaUnica.drop(columns=['Impuesto'], inplace=True)
                else:
                    # Add a 'Descuento' column with null values (using pd.NA or None)
-                   lineaUnica['CodImpuesto', 'ImpuestoCodTarifa','PorcentajeImpuesto','MontoImpuesto'] = pd.NA  # You can also use None if preferred
+                   lineaUnica['CodImpuesto', 'ImpuestoCodTarifa','ImpuestoPorcentaje','MontoImpuesto'] = pd.NA  # You can also use None if preferred
              
                 # Optionally, save DataFrame to a CSV file
                lineaUnica.to_csv('linea_detalle_data.csv', index=False)
@@ -163,7 +167,7 @@ def parse_xml(file_path):
                         'FacturaID': fc['FacturaID'],
                         'Codigo': item.get('Codigo', ''),
                         'Detalle':item.get('Detalle', ''),
-                        'PorcentajeImpuesto': item.get('Impuesto', {}).get('Tarifa', ''),
+                        'ImpuestoPorcentaje': item.get('Impuesto', {}).get('Tarifa', ''),
                         'NaturalezaDescuento': item.get('Descuento', {}).get('NaturalezaDescuento', ''),
                         'CodImpuesto': item.get('Impuesto', {}).get('Codigo', ''),
                         'ImpuestoCodTarifa': item.get('Impuesto', {}).get('CodigoTarifa', ''),
@@ -176,6 +180,7 @@ def parse_xml(file_path):
                         'id_producto': code[:5] + str(len(item.get('Detalle', ''))),
                         'UnidadMedida': item.get('UnidadMedida',''),
                         'UnidadMedidaComercial': item.get('UnidadMedidaComercial',''),
+                        'MontoTotal': item.get('MontoTotal','')
                          }
                     detalle.append(record)
                 # Convert list of dictionaries to DataFrame
@@ -194,7 +199,39 @@ def parse_xml(file_path):
     except Exception as e:
         print(f"Error processing XML: {str(e)}")
 #%%
+def start_flag():
+    starfile = "start.txt"
+    
+    endfile = "end.txt"
+
+    if os.path.exists(endfile):
+        os.remove(endfile)
+    else:
+        pass
+    # Open the file in write mode and write "0"
+    with open(starfile, "w") as file:
+        file.write("1")
+            
+#%%    
+def end_flag():
+    starfile = "start.txt"
+    endfile = "end.txt"
+
+    if os.path.exists(starfile):           
+        os.remove(starfile)
+    else:
+        pass
+    #     # Reopen the file in write mode and write "1"
+    with open(endfile, "w") as file:
+        file.write("1")
+    
+
+        
+#%%
 if __name__ == "__main__":
+    
+    # start_flag()
+    
     # Open file dialog to select an XML file
     file_path = open_file_dialog()
 
@@ -202,5 +239,6 @@ if __name__ == "__main__":
     if file_path:
         print(f"File selected: {file_path}")
         parse_xml(file_path)
+        # end_flag()
     else:
         print("No file selected.")
