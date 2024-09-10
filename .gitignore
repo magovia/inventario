@@ -2,8 +2,10 @@
 
 # User-specific files
 *.xlsm
+*.xlsx
 *.csv
 *.laccdb
+*.bat
 # User-specific files ()
 
 # Mono auto generated files
