@@ -150,7 +150,10 @@ def parse_xml(file_path):
                    lineaUnica.drop(columns=['Impuesto'], inplace=True)
                else:
                    # Add a 'Descuento' column with null values (using pd.NA or None)
-                   lineaUnica['CodImpuesto', 'ImpuestoCodTarifa','ImpuestoPorcentaje','MontoImpuesto'] = pd.NA  # You can also use None if preferred
+                   lineaUnica['CodImpuesto']=0
+                   lineaUnica['ImpuestoCodTarifa']=0
+                   lineaUnica['ImpuestoPorcentaje']=0
+                   lineaUnica['MontoImpuesto'] = 0  
              
                 # Optionally, save DataFrame to a CSV file
                #lineaUnica.to_csv('linea_detalle_data.csv', index=False)
