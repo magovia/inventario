@@ -39,23 +39,63 @@ def parse_xml(file_path):
         
 #%% Extraer ResumenFactura
         # Extract the list of line items
-        resumenfc = data_dict['FacturaElectronica']['ResumenFactura']
-        resumenfc = pd.DataFrame([resumenfc])
-        #Columna no es necesaria
-        resumenfc.drop(columns=['CodigoTipoMoneda'], inplace=True)
+        # resumenfc = data_dict['FacturaElectronica']['ResumenFactura']
+        # resumenfc = pd.DataFrame([resumenfc])
+        # #Columna no es necesaria
+        # resumenfc.drop(columns=['CodigoTipoMoneda'], inplace=True)
         
-        # save DataFrame to a CSV file
-        #resumenfc.to_csv('tblresumenfactura.csv', index=False) 
-        resumenfc.to_excel('tblresumenfactura.xlsx', index=False) 
+        # # save DataFrame to a CSV file
+        # #resumenfc.to_csv('tblresumenfactura.csv', index=False) 
+        # resumenfc.to_excel('tblresumenfactura.xlsx', index=False) 
+        
+       # Extract the list of line items
+        resumenfc = data_dict['FacturaElectronica']['ResumenFactura']
+        
+        #Columna no es necesaria
+        #resumenfc.drop(columns=['CodigoTipoMoneda'], inplace=True)
+        
+        resumenfact = {
+            'TotalServGravados':resumenfc.get('TotalServGravados',0),
+            'TotalServExentos':resumenfc.get('TotalServExentos',0),
+            'TotalServExonerado':resumenfc.get('TotalServExonerado',0),
+            'TotalMercanciasGravadas':resumenfc.get('TotalMercanciasGravadas',0),
+            'TotalMercanciasExentas':resumenfc.get('TotalMercanciasExentas',0),
+            'TotalMercExonerada':resumenfc.get('TotalMercExonerada',0),
+            'TotalGravado':resumenfc.get('TotalGravado',0),
+            'TotalExento':resumenfc.get('TotalExento',0),
+            'TotalExonerado':resumenfc.get('TotalExonerado',0),
+            'TotalVenta':resumenfc.get('TotalVenta',0),
+            'TotalVentaNeta':resumenfc.get('TotalVentaNeta',0),
+            'TotalImpuesto':resumenfc.get('TotalImpuesto',0),
+            'TotalIVADevuelto':resumenfc.get('TotalIVADevuelto',0), 
+            'TotalComprobante':resumenfc.get('TotalComprobante',0),
+            'TotalOtrosCargos':resumenfc.get('TotalOtrosCargos',0),
+            'TotalDescuentos':resumenfc.get('TotalDescuentos',0)
+            }
+        
+        resumenfact = pd.DataFrame([resumenfact])
+
+        # save DataFrame as xlsx file 
+        resumenfact.to_excel('tblresumenfactura.xlsx', index=False)        
+        
+
     #%%  
         emisor = data_dict['FacturaElectronica']['Emisor']
         dataEmisor = {
-        'Nombre': emisor['Nombre'],
-        'personeriaJuridica': emisor['Identificacion']['Numero'],
-        'NombreComercial': emisor['NombreComercial'],
-        'Telefono': emisor['Telefono']['NumTelefono'],
-        'CorreoElectronico': emisor['CorreoElectronico']
+        'Nombre': emisor.get('Nombre',"No encontrado"),
+        'personeriaJuridica': emisor.get('Identificacion',{}).get('Numero',"0000"),
+        'NombreComercial': emisor.get('NombreComercial',"No encontrado"),
+        'Telefono': emisor.get('Telefono',{}).get('NumTelefono',"00000"),
+        'CorreoElectronico': emisor.get('CorreoElectronico',"No encontrado")
         }
+        
+        # dataEmisor = {
+        # 'Nombre': emisor['Nombre'],
+        # 'personeriaJuridica': emisor['Identificacion']['Numero'],
+        # 'NombreComercial': emisor['NombreComercial'],
+        # 'Telefono': emisor['Telefono']['NumTelefono'],
+        # 'CorreoElectronico': emisor['CorreoElectronico']
+        # }
         
         # Create DataFrame
         tblProveedor = pd.DataFrame([dataEmisor])
@@ -74,8 +114,7 @@ def parse_xml(file_path):
         'personeriaJuridica': emisor['Identificacion']['Numero'],
         'CondicionVenta': tblfactura.get('CondicionVenta',''),
         'PlazoCredito': tblfactura.get('PlazoCredito',''),
-        'MedioPago': tblfactura.get('MedioPago','')
-        
+        'MedioPago': tblfactura.get('MedioPago','')      
         }
         
         # Create DataFrame
