@@ -10,6 +10,7 @@ import pandas as pd
 import tkinter as tk
 from tkinter import filedialog
 import os
+import ctypes
 
 #%%
 def open_file_dialog():
@@ -271,7 +272,18 @@ def end_flag():
     #     # Reopen the file in write mode and write "1"
     with open(endfile, "w") as file:
         file.write("1")
-    
+## https://stackoverflow.com/questions/2963263/how-can-i-create-a-simple-message-box-in-python 
+##  Styles:
+##  0 : OK
+##  1 : OK | Cancel
+##  2 : Abort | Retry | Ignore
+##  3 : Yes | No | Cancel
+##  4 : Yes | No
+##  5 : Retry | Cancel 
+##  6 : Cancel | Try Again | Continue
+
+def Mbox(title, text, style):
+    return ctypes.windll.user32.MessageBoxW(0, text, title, style)
 
         
 #%%
@@ -287,5 +299,7 @@ if __name__ == "__main__":
         print(f"File selected: {file_path}")
         parse_xml(file_path)
         # end_flag()
+        Mbox('Importar XML', 'Archivo xml importado con éxito', 64)
     else:
         print("No file selected.")
+        Mbox('Importar XML', 'Hubo un error al importar el archivo xml', 16)
