@@ -25,18 +25,27 @@ def open_file_dialog():
         filetypes=[("XML Files", "*.xml")]
     )
     
+    print(f"File selected: {file_path}")
+    
     return file_path
 
-#%%
+
 #%% Function to connect to MS Access database
 def connect_to_db():
-    db_path = os.path.join(os.getcwd(), 'inv.accdb')
-    conn_str = (
-        r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};'
-        f'DBQ={db_path};'
-    )
-    conn = pyodbc.connect(conn_str)
-    return conn
+    try:
+        db_path = os.path.join(os.getcwd(), 'inv.accdb')
+        conn_str = (
+            r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};'
+            f'DBQ={db_path};'
+            r'ExtendedAnsiSQL=1;'
+        )
+        
+        conn = pyodbc.connect(conn_str)
+        
+        print("Connection succesfull")
+        return conn
+    except pyodbc.Error as e:
+        print("Error in connection",e)
 
 #%% Function to delete all records from a table
 def delete_all_from_table(conn, table_name):
@@ -45,7 +54,7 @@ def delete_all_from_table(conn, table_name):
     cursor.execute(delete_query)
     conn.commit()
     cursor.close()
-    
+#%%  Function to parse xml file and update database    
 def parse_xml(file_path):
     conn = None
     try:
@@ -208,6 +217,8 @@ def parse_xml(file_path):
                 # Optionally, save DataFrame to a CSV file
                #lineaUnica.to_csv('linea_detalle_data.csv', index=False)
                lineaUnica.to_excel('linea_detalle_data.xlsx', index=False)
+               delete_all_from_table(conn, "XLS_Detalle")
+               append_to_access(conn, lineaUnica, "XLS_Detalle") 
                    
             elif isinstance(element, dict):
                 # print(f"Element at index {idx} is a dictionary: {element}")           
@@ -246,18 +257,20 @@ def parse_xml(file_path):
                 # Optionally, save DataFrame to a CSV file
                 #detalleLinea.to_csv('linea_detalle_data.csv', index=False)
                 detalleLinea.to_excel('linea_detalle_data.xlsx', index=False)
-               
                 delete_all_from_table(conn, "XLS_Detalle")
-                append_to_access(conn, detalleLinea, "XLS_Detalle")
+                append_to_access(conn, detalleLinea, "XLS_Detalle") 
                 
             else:
                 print(f"Element at index {idx} is of type {type(element)}: {element}")
-         
+        
+
+        Mbox('Importar XML', f'Archivo xml importado con éxito.\n\nFactura: {fc['FacturaID']}.\nProveedor: {emisor.get('NombreComercial',"No encontrado")}.', 64)
         
     except xmltodict.expat.ExpatError as e:
         print(f"XML parsing error: {e}")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
+        Mbox('Importar XML', f"No se pudo subir la factura electronica:      {e}", 16)
     except Exception as e:
         print(f"Error processing XML: {str(e)}")
 
@@ -297,10 +310,9 @@ if __name__ == "__main__":
 
     # If a file was selected, parse it
     if file_path:
-        print(f"File selected: {file_path}")
         parse_xml(file_path)
         # end_flag()
-        Mbox('Importar XML', 'Archivo xml importado con éxito', 64)
+        #Mbox('Importar XML', 'Archivo xml importado con éxito', 64)
     else:
         print("No file selected.")
         Mbox('Importar XML', 'Hubo un error al importar el archivo xml', 16)
