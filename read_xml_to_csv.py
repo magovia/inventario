@@ -117,8 +117,8 @@ def parse_xml(file_path):
         # Optionally, save DataFrame as xlsx file
         tblProveedor.to_excel('proveedor.xlsx', index=False) 
         
-        delete_all_from_table(conn, "XLS_Proveedor")
-        append_to_access(conn, tblProveedor, "XLS_Proveedor")
+        #delete_all_from_table(conn, "XLS_Proveedor")
+        #append_to_access(conn, tblProveedor, "XLS_Proveedor")
         
 #Extrae la factura  
         tblfactura = data_dict['FacturaElectronica']
@@ -141,8 +141,8 @@ def parse_xml(file_path):
         #tblfactura.to_csv('factura.csv', index=False)
         tblfactura.to_excel('factura.xlsx', index=False)
         
-        delete_all_from_table(conn, "XLS_Factura")
-        append_to_access(conn, tblfactura, "XLS_Factura")
+        #delete_all_from_table(conn, "XLS_Factura")
+        #append_to_access(conn, tblfactura, "XLS_Factura")
         
 #Extrae el detalle de las lineas
         # Extract the list of line items
@@ -217,8 +217,9 @@ def parse_xml(file_path):
                 # Optionally, save DataFrame to a CSV file
                #lineaUnica.to_csv('linea_detalle_data.csv', index=False)
                lineaUnica.to_excel('linea_detalle_data.xlsx', index=False)
-               delete_all_from_table(conn, "XLS_Detalle")
-               append_to_access(conn, lineaUnica, "XLS_Detalle") 
+               
+               #delete_all_from_table(conn, "XLS_Detalle")
+               #append_to_access(conn, lineaUnica, "XLS_Detalle") 
                    
             elif isinstance(element, dict):
                 # print(f"Element at index {idx} is a dictionary: {element}")           
@@ -257,8 +258,8 @@ def parse_xml(file_path):
                 # Optionally, save DataFrame to a CSV file
                 #detalleLinea.to_csv('linea_detalle_data.csv', index=False)
                 detalleLinea.to_excel('linea_detalle_data.xlsx', index=False)
-                delete_all_from_table(conn, "XLS_Detalle")
-                append_to_access(conn, detalleLinea, "XLS_Detalle") 
+                #delete_all_from_table(conn, "XLS_Detalle")
+                #append_to_access(conn, detalleLinea, "XLS_Detalle") 
                 
             else:
                 print(f"Element at index {idx} is of type {type(element)}: {element}")
