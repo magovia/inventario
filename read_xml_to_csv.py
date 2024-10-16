@@ -64,8 +64,14 @@ def parse_xml(file_path):
         
         resumenfact = pd.DataFrame([resumenfact])
 
+        # Create the full path for the Excel file
+        excel_path = os.path.join(script_dir, 'tblresumenfactura.xlsx')
+        
+        # Save DataFrame as xlsx file in the same directory as the script
+        resumenfact.to_excel(excel_path, index=False)
+        
         # save DataFrame as xlsx file 
-        resumenfact.to_excel('tblresumenfactura.xlsx', index=False)   
+        #resumenfact.to_excel('tblresumenfactura.xlsx', index=False)   
                 
 
 #%% Extrae el Proveedor 
@@ -80,9 +86,15 @@ def parse_xml(file_path):
         
         # Create DataFrame
         tblProveedor = pd.DataFrame([dataEmisor])
+               
+        # Create the full path for the Excel file
+        excel_path = os.path.join(script_dir, 'proveedor.xlsx')
         
+        # Save DataFrame as xlsx file in the same directory as the script
+        tblProveedor.to_excel(excel_path, index=False)
+       
         # Optionally, save DataFrame as xlsx file
-        tblProveedor.to_excel('proveedor.xlsx', index=False) 
+        #tblProveedor.to_excel('proveedor.xlsx', index=False) 
         
         
 #%% Extrae la factura  
@@ -102,9 +114,14 @@ def parse_xml(file_path):
         # Create DataFrame
         tblfactura = pd.DataFrame([fc])
     
-        # Optionally, save DataFrame to a CSV file
+        # Create the full path for the Excel file
+        excel_path = os.path.join(script_dir, 'factura.xlsx')
+        
+        # Save DataFrame as xlsx file in the same directory as the script
+        tblfactura.to_excel(excel_path, index=False)
+        
         #tblfactura.to_csv('factura.csv', index=False)
-        tblfactura.to_excel('factura.xlsx', index=False)
+       # tblfactura.to_excel('factura.xlsx', index=False)
 
         
 #%% Extrae el detalle de las lineas
@@ -177,9 +194,16 @@ def parse_xml(file_path):
                    lineaUnica['ImpuestoPorcentaje']=0
                    lineaUnica['MontoImpuesto'] = 0  
              
-                # Optionally, save DataFrame to a CSV file
+               
+             # Create the full path for the Excel file
+               excel_path = os.path.join(script_dir, 'linea_detalle_data.xlsx')
+        
+            # Save DataFrame as xlsx file in the same directory as the script
+               excel_path.to_excel(excel_path, index=False)
+                
+             # Optionally, save DataFrame to a CSV file
                #lineaUnica.to_csv('linea_detalle_data.csv', index=False)
-               lineaUnica.to_excel('linea_detalle_data.xlsx', index=False)
+               #lineaUnica.to_excel('linea_detalle_data.xlsx', index=False)
                
                #delete_all_from_table(conn, "XLS_Detalle")
                #append_to_access(conn, lineaUnica, "XLS_Detalle") 
@@ -217,10 +241,15 @@ def parse_xml(file_path):
                     detalle.append(record)
                 # Convert list of dictionaries to DataFrame
                 detalleLinea = pd.DataFrame(detalle)
+
+                # Create the full path for the Excel file
+                excel_path = os.path.join(script_dir, 'linea_detalle_data.xlsx')
+        
+                # Save DataFrame as xlsx file in the same directory as the script
+                detalleLinea.to_excel(excel_path, index=False)
                                         
                 # Optionally, save DataFrame to a CSV file
-                #detalleLinea.to_csv('linea_detalle_data.csv', index=False)
-                detalleLinea.to_excel('linea_detalle_data.xlsx', index=False)
+                #detalleLinea.to_excel('linea_detalle_data.xlsx', index=False)
                 
             else:
                 print(f"Element at index {idx} is of type {type(element)}: {element}")
@@ -257,6 +286,10 @@ def Mbox(title, text, style):
 #%%
 if __name__ == "__main__":
     
+    
+    #Get the directory of the current script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+        
     # Open file dialog to select an XML file
     file_path = open_file_dialog()
 
