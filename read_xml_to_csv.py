@@ -29,45 +29,16 @@ def open_file_dialog():
     
     return file_path
 
-
-#%% Function to connect to MS Access database
-def connect_to_db():
-    try:
-        db_path = os.path.join(os.getcwd(), 'inv.accdb')
-        conn_str = (
-            r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};'
-            f'DBQ={db_path};'
-            r'ExtendedAnsiSQL=1;'
-        )
-        
-        conn = pyodbc.connect(conn_str)
-        
-        print("Connection succesfull")
-        return conn
-    except pyodbc.Error as e:
-        print("Error in connection",e)
-
-#%% Function to delete all records from a table
-def delete_all_from_table(conn, table_name):
-    cursor = conn.cursor()
-    delete_query = f"DELETE FROM {table_name}"
-    cursor.execute(delete_query)
-    conn.commit()
-    cursor.close()
 #%%  Function to parse xml file and update database    
 def parse_xml(file_path):
-    conn = None
     try:
-        # Connect to the Access database
-        conn = connect_to_db()
     
         with open(file_path, 'r', encoding='utf-8') as file:
             xml_content = file.read()
             
         # Parsear el XML a un diccionario
         data_dict = xmltodict.parse(xml_content)
-        
-        
+
  # Extraer ResumenFactura
          # Extract the list of line items
         resumenfc = data_dict['FacturaElectronica']['ResumenFactura']
@@ -95,11 +66,7 @@ def parse_xml(file_path):
 
         # save DataFrame as xlsx file 
         resumenfact.to_excel('tblresumenfactura.xlsx', index=False)   
-        
-        
-        delete_all_from_table(conn, "XLS_Resumen")
-        append_to_access(conn, resumenfact, "XLS_Resumen")
-        
+                
 
 #Extrae el Proveedor 
         emisor = data_dict['FacturaElectronica']['Emisor']
@@ -117,8 +84,6 @@ def parse_xml(file_path):
         # Optionally, save DataFrame as xlsx file
         tblProveedor.to_excel('proveedor.xlsx', index=False) 
         
-        delete_all_from_table(conn, "XLS_Proveedor")
-        append_to_access(conn, tblProveedor, "XLS_Proveedor")
         
 #Extrae la factura  
         tblfactura = data_dict['FacturaElectronica']
@@ -140,9 +105,7 @@ def parse_xml(file_path):
         # Optionally, save DataFrame to a CSV file
         #tblfactura.to_csv('factura.csv', index=False)
         tblfactura.to_excel('factura.xlsx', index=False)
-        
-        delete_all_from_table(conn, "XLS_Factura")
-        append_to_access(conn, tblfactura, "XLS_Factura")
+
         
 #Extrae el detalle de las lineas
         # Extract the list of line items
@@ -217,8 +180,9 @@ def parse_xml(file_path):
                 # Optionally, save DataFrame to a CSV file
                #lineaUnica.to_csv('linea_detalle_data.csv', index=False)
                lineaUnica.to_excel('linea_detalle_data.xlsx', index=False)
-               delete_all_from_table(conn, "XLS_Detalle")
-               append_to_access(conn, lineaUnica, "XLS_Detalle") 
+               
+               #delete_all_from_table(conn, "XLS_Detalle")
+               #append_to_access(conn, lineaUnica, "XLS_Detalle") 
                    
             elif isinstance(element, dict):
                 # print(f"Element at index {idx} is a dictionary: {element}")           
@@ -257,8 +221,6 @@ def parse_xml(file_path):
                 # Optionally, save DataFrame to a CSV file
                 #detalleLinea.to_csv('linea_detalle_data.csv', index=False)
                 detalleLinea.to_excel('linea_detalle_data.xlsx', index=False)
-                delete_all_from_table(conn, "XLS_Detalle")
-                append_to_access(conn, detalleLinea, "XLS_Detalle") 
                 
             else:
                 print(f"Element at index {idx} is of type {type(element)}: {element}")
@@ -274,36 +236,26 @@ def parse_xml(file_path):
     except Exception as e:
         print(f"Error processing XML: {str(e)}")
 
-
-#%% Helper function to append DataFrame to MS Access table
-def append_to_access(conn, df, table_name):
-    cursor = conn.cursor()
-    for index, row in df.iterrows():
-        columns = ', '.join(row.index)
-        placeholders = ', '.join(['?'] * len(row))
-        query = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
-        cursor.execute(query, tuple(row))
-    conn.commit()
-    cursor.close()
 #%% 
-## https://stackoverflow.com/questions/2963263/how-can-i-create-a-simple-message-box-in-python 
-##  Styles:
-##  0 : OK
-##  1 : OK | Cancel
-##  2 : Abort | Retry | Ignore
-##  3 : Yes | No | Cancel
-##  4 : Yes | No
-##  5 : Retry | Cancel 
-##  6 : Cancel | Try Again | Continue
 
 def Mbox(title, text, style):
+    
+    ## https://stackoverflow.com/questions/2963263/how-can-i-create-a-simple-message-box-in-python 
+    ##  Styles:
+    ##  0 : OK
+    ##  1 : OK | Cancel
+    ##  2 : Abort | Retry | Ignore
+    ##  3 : Yes | No | Cancel
+    ##  4 : Yes | No
+    ##  5 : Retry | Cancel 
+    ##  6 : Cancel | Try Again | Continue
+
+
     return ctypes.windll.user32.MessageBoxW(0, text, title, style)
 
         
 #%%
 if __name__ == "__main__":
-    
-    # start_flag()
     
     # Open file dialog to select an XML file
     file_path = open_file_dialog()
@@ -311,7 +263,6 @@ if __name__ == "__main__":
     # If a file was selected, parse it
     if file_path:
         parse_xml(file_path)
-        # end_flag()
         #Mbox('Importar XML', 'Archivo xml importado con éxito', 64)
     else:
         print("No file selected.")

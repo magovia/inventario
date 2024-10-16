@@ -2,7 +2,6 @@
 
 # User-specific files
 *.xlsm
-*.xlsx
 *.csv
 *.laccdb
 *.bat
