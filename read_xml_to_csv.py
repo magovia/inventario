@@ -39,7 +39,7 @@ def parse_xml(file_path):
         # Parsear el XML a un diccionario
         data_dict = xmltodict.parse(xml_content)
 
- # Extraer ResumenFactura
+#%% Extraer ResumenFactura
          # Extract the list of line items
         resumenfc = data_dict['FacturaElectronica']['ResumenFactura']
         
@@ -68,7 +68,7 @@ def parse_xml(file_path):
         resumenfact.to_excel('tblresumenfactura.xlsx', index=False)   
                 
 
-#Extrae el Proveedor 
+#%% Extrae el Proveedor 
         emisor = data_dict['FacturaElectronica']['Emisor']
         dataEmisor = {
         'Nombre': emisor.get('Nombre',"No encontrado"),
@@ -85,7 +85,7 @@ def parse_xml(file_path):
         tblProveedor.to_excel('proveedor.xlsx', index=False) 
         
         
-#Extrae la factura  
+#%% Extrae la factura  
         tblfactura = data_dict['FacturaElectronica']
         # type(factura)
         # print('total items en factura: ',len(factura['DetalleServicio']['LineaDetalle']))
@@ -107,7 +107,7 @@ def parse_xml(file_path):
         tblfactura.to_excel('factura.xlsx', index=False)
 
         
-#Extrae el detalle de las lineas
+#%% Extrae el detalle de las lineas
         # Extract the list of line items
         line_items = data_dict['FacturaElectronica']['DetalleServicio']['LineaDetalle']
         
@@ -224,9 +224,9 @@ def parse_xml(file_path):
                 
             else:
                 print(f"Element at index {idx} is of type {type(element)}: {element}")
-        
+    
+        Mbox('Importar XML', f'Archivo xml importado con éxito.\n\nFactura: {fc["FacturaID"]}\nProveedor: {emisor.get("Nombre", "No encontrado")}', 64)
 
-        Mbox('Importar XML', f'Archivo xml importado con éxito.\n\nFactura: {fc['FacturaID']}.\nProveedor: {emisor.get('NombreComercial',"No encontrado")}.', 64)
         
     except xmltodict.expat.ExpatError as e:
         print(f"XML parsing error: {e}")
@@ -236,7 +236,7 @@ def parse_xml(file_path):
     except Exception as e:
         print(f"Error processing XML: {str(e)}")
 
-#%% 
+#%% funcion para el mensaje box
 
 def Mbox(title, text, style):
     
