@@ -199,7 +199,7 @@ def parse_xml(file_path):
                excel_path = os.path.join(script_dir, 'linea_detalle_data.xlsx')
         
             # Save DataFrame as xlsx file in the same directory as the script
-               excel_path.to_excel(excel_path, index=False)
+               lineaUnica.to_excel(excel_path, index=False)
                 
              # Optionally, save DataFrame to a CSV file
                #lineaUnica.to_csv('linea_detalle_data.csv', index=False)
