@@ -10,10 +10,12 @@ echo ===========================
 echo ATENCION: Asegurese de tener conexion a internet...
 Pause
 
-git add inv_backEnd.accdb      :: Stage the specific file you want to push
-git commit -m "Base de datos respaldada exitosamente"  :: Commit with a message
-git push distleimi     :: Push to the main branch
+git add inv_backEnd.accdb 
+git commit -m "Base de datos respaldada exitosamente"
+git push
 
+echo ==============================================
 echo Base de datos ha sido respaldada exitosamente.
-pause                    :: Pause to keep the window open and see results
+echo ==============================================
+pause 
 
