@@ -4,7 +4,6 @@
 *.xlsm
 *.csv
 *.laccdb
-*.bat
 # User-specific files ()
 
 # Mono auto generated files
