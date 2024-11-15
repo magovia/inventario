@@ -1,0 +1,24 @@
+Ingresar 
+Ok- Proveedor
+OK- Producto
+- Compra
+OK- Venta
+- [Subir factura] -> abrir formulario(btnGuardar)
+
+Dashboard:
+Ok- Mostrar inventario actual
+- Productos con saldos mínimos.
+- Productos con saldos 0
+OK- Mostrar monto total del costo del inventario
+OK- Mostrar monto total del costo por el porcentaje Utilización 
+Ok- Mostrar ordenes por estatus
+
+Reportes:
+- Reporte de órdenes de venta
+- Inventario descontinuado
+- Catálogo con fotos
+- Niveles inventario por proveedores
+- Niveles inventario por Almacen
+- Niveles inventario por categoría
+- Productos en reorden o mínimos.
+- Proforma
