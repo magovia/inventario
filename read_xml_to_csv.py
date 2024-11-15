@@ -193,7 +193,17 @@ def parse_xml(file_path):
                    lineaUnica['ImpuestoCodTarifa']=0
                    lineaUnica['ImpuestoPorcentaje']=0
                    lineaUnica['MontoImpuesto'] = 0  
-             
+             #Modifying format
+               lineaUnica['MontoTotalLinea'] = lineaUnica['MontoTotalLinea'].astype(float)
+               lineaUnica['MontoDescuento'] = lineaUnica['MontoDescuento'].astype(float)
+               lineaUnica['ImpuestoPorcentaje'] = lineaUnica['ImpuestoPorcentaje'].astype(float)
+               lineaUnica['MontoImpuesto'] = lineaUnica['MontoImpuesto'].astype(float)
+               lineaUnica['Cantidad'] = lineaUnica['Cantidad'].astype(float)
+               lineaUnica['PrecioUnitario'] = lineaUnica['PrecioUnitario'].astype(float)
+               lineaUnica['MontoTotal'] = lineaUnica['MontoTotal'].astype(float)
+               lineaUnica['SubTotal'] = lineaUnica['MontoTotal'].astype(float)
+               lineaUnica['CodImpuesto'] = lineaUnica['CodImpuesto'].astype(float)
+               lineaUnica['ImpuestoCodTarifa'] = lineaUnica['ImpuestoCodTarifa'].astype(float)
                
              # Create the full path for the Excel file
                excel_path = os.path.join(script_dir, 'linea_detalle_data.xlsx')
