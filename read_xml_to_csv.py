@@ -229,7 +229,7 @@ def parse_xml(file_path):
                         'ImpuestoCodTarifa': int(item.get('Impuesto', {}).get('CodigoTarifa', '')),
                         'Cantidad': float(item.get('Cantidad', '')),
                         'PrecioUnitario': float(item.get('PrecioUnitario', '')),
-                        'MontoDescuento': item.get('Descuento', {}).get('MontoDescuento', 0),
+                        'MontoDescuento':float( item.get('Descuento', {}).get('MontoDescuento', 0)),
                         'MontoImpuesto': float(item.get('Impuesto', {}).get('Monto', 0)),
                         'SubTotal': float(item.get('SubTotal', '')),
                         'MontoTotalLinea': float(item.get('MontoTotalLinea', '')),
