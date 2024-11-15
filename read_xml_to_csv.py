@@ -223,20 +223,20 @@ def parse_xml(file_path):
                         'FacturaID': fc['FacturaID'],
                         'Codigo': item.get('Codigo', ''),
                         'Detalle':item.get('Detalle', ''),
-                        'ImpuestoPorcentaje': item.get('Impuesto', {}).get('Tarifa', ''),
+                        'ImpuestoPorcentaje': float(item.get('Impuesto', {}).get('Tarifa', '')),
                         'NaturalezaDescuento': item.get('Descuento', {}).get('NaturalezaDescuento', ''),
-                        'CodImpuesto': item.get('Impuesto', {}).get('Codigo', ''),
-                        'ImpuestoCodTarifa': item.get('Impuesto', {}).get('CodigoTarifa', ''),
-                        'Cantidad': item.get('Cantidad', ''),
-                        'PrecioUnitario': item.get('PrecioUnitario', ''),
+                        'CodImpuesto': int(item.get('Impuesto', {}).get('Codigo', '')),
+                        'ImpuestoCodTarifa': int(item.get('Impuesto', {}).get('CodigoTarifa', '')),
+                        'Cantidad': float(item.get('Cantidad', '')),
+                        'PrecioUnitario': float(item.get('PrecioUnitario', '')),
                         'MontoDescuento': item.get('Descuento', {}).get('MontoDescuento', 0),
-                        'MontoImpuesto': item.get('Impuesto', {}).get('Monto', 0),
-                        'SubTotal': item.get('SubTotal', ''),
-                        'MontoTotalLinea': item.get('MontoTotalLinea', ''),
+                        'MontoImpuesto': float(item.get('Impuesto', {}).get('Monto', 0)),
+                        'SubTotal': float(item.get('SubTotal', '')),
+                        'MontoTotalLinea': float(item.get('MontoTotalLinea', '')),
                         'id_producto': code[:5] + str(len(item.get('Detalle', ''))),
                         'UnidadMedida': item.get('UnidadMedida',''),
                         'UnidadMedidaComercial': item.get('UnidadMedidaComercial',''),
-                        'MontoTotal': item.get('MontoTotal','')
+                        'MontoTotal': float(item.get('MontoTotal',''))
                          }
                     detalle.append(record)
                 # Convert list of dictionaries to DataFrame
