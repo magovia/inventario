@@ -147,7 +147,7 @@ def parse_xml(file_path):
                #Agregar Factura ID
                lineaUnica['FacturaID']=data_dict['FacturaElectronica']['NumeroConsecutivo']
                
-               
+               lineaUnica['Tipo']= 'Factura'
                #Eliminar columnas
                #lineaUnica.drop(columns=['MontoTotalLinea'], inplace=True)
                lineaUnica.drop(columns=['CodigoComercial'], inplace=True)
@@ -236,12 +236,15 @@ def parse_xml(file_path):
                         'id_producto': code[:5] + str(len(item.get('Detalle', ''))),
                         'UnidadMedida': item.get('UnidadMedida',''),
                         'UnidadMedidaComercial': item.get('UnidadMedidaComercial',''),
-                        'MontoTotal': float(item.get('MontoTotal',''))
+                        'MontoTotal': float(item.get('MontoTotal',''))                        
                          }
                     detalle.append(record)
+                
+                
                 # Convert list of dictionaries to DataFrame
                 detalleLinea = pd.DataFrame(detalle)
 
+                detalleLinea['tipo']='factura'
                 # Create the full path for the Excel file
                 excel_path = os.path.join(script_dir, 'linea_detalle_data.xlsx')
         
