@@ -147,7 +147,7 @@ def parse_xml(file_path):
                #Agregar Factura ID
                lineaUnica['FacturaID']=data_dict['FacturaElectronica']['NumeroConsecutivo']
                
-               
+               lineaUnica['Tipo']= 'Factura'
                #Eliminar columnas
                #lineaUnica.drop(columns=['MontoTotalLinea'], inplace=True)
                lineaUnica.drop(columns=['CodigoComercial'], inplace=True)
@@ -193,7 +193,17 @@ def parse_xml(file_path):
                    lineaUnica['ImpuestoCodTarifa']=0
                    lineaUnica['ImpuestoPorcentaje']=0
                    lineaUnica['MontoImpuesto'] = 0  
-             
+             #Modifying format
+               lineaUnica['MontoTotalLinea'] = lineaUnica['MontoTotalLinea'].astype(float)
+               lineaUnica['MontoDescuento'] = lineaUnica['MontoDescuento'].astype(float)
+               lineaUnica['ImpuestoPorcentaje'] = lineaUnica['ImpuestoPorcentaje'].astype(float)
+               lineaUnica['MontoImpuesto'] = lineaUnica['MontoImpuesto'].astype(float)
+               lineaUnica['Cantidad'] = lineaUnica['Cantidad'].astype(float)
+               lineaUnica['PrecioUnitario'] = lineaUnica['PrecioUnitario'].astype(float)
+               lineaUnica['MontoTotal'] = lineaUnica['MontoTotal'].astype(float)
+               lineaUnica['SubTotal'] = lineaUnica['MontoTotal'].astype(float)
+               lineaUnica['CodImpuesto'] = lineaUnica['CodImpuesto'].astype(float)
+               lineaUnica['ImpuestoCodTarifa'] = lineaUnica['ImpuestoCodTarifa'].astype(float)
                
              # Create the full path for the Excel file
                excel_path = os.path.join(script_dir, 'linea_detalle_data.xlsx')
@@ -223,25 +233,28 @@ def parse_xml(file_path):
                         'FacturaID': fc['FacturaID'],
                         'Codigo': item.get('Codigo', ''),
                         'Detalle':item.get('Detalle', ''),
-                        'ImpuestoPorcentaje': item.get('Impuesto', {}).get('Tarifa', ''),
+                        'ImpuestoPorcentaje': float(item.get('Impuesto', {}).get('Tarifa', '')),
                         'NaturalezaDescuento': item.get('Descuento', {}).get('NaturalezaDescuento', ''),
-                        'CodImpuesto': item.get('Impuesto', {}).get('Codigo', ''),
-                        'ImpuestoCodTarifa': item.get('Impuesto', {}).get('CodigoTarifa', ''),
-                        'Cantidad': item.get('Cantidad', ''),
-                        'PrecioUnitario': item.get('PrecioUnitario', ''),
-                        'MontoDescuento': item.get('Descuento', {}).get('MontoDescuento', 0),
-                        'MontoImpuesto': item.get('Impuesto', {}).get('Monto', 0),
-                        'SubTotal': item.get('SubTotal', ''),
-                        'MontoTotalLinea': item.get('MontoTotalLinea', ''),
+                        'CodImpuesto': int(item.get('Impuesto', {}).get('Codigo', '')),
+                        'ImpuestoCodTarifa': int(item.get('Impuesto', {}).get('CodigoTarifa', '')),
+                        'Cantidad': float(item.get('Cantidad', '')),
+                        'PrecioUnitario': float(item.get('PrecioUnitario', '')),
+                        'MontoDescuento':float( item.get('Descuento', {}).get('MontoDescuento', 0)),
+                        'MontoImpuesto': float(item.get('Impuesto', {}).get('Monto', 0)),
+                        'SubTotal': float(item.get('SubTotal', '')),
+                        'MontoTotalLinea': float(item.get('MontoTotalLinea', '')),
                         'id_producto': code[:5] + str(len(item.get('Detalle', ''))),
                         'UnidadMedida': item.get('UnidadMedida',''),
                         'UnidadMedidaComercial': item.get('UnidadMedidaComercial',''),
-                        'MontoTotal': item.get('MontoTotal','')
+                        'MontoTotal': float(item.get('MontoTotal',''))                        
                          }
                     detalle.append(record)
+                
+                
                 # Convert list of dictionaries to DataFrame
                 detalleLinea = pd.DataFrame(detalle)
 
+                detalleLinea['tipo']='factura'
                 # Create the full path for the Excel file
                 excel_path = os.path.join(script_dir, 'linea_detalle_data.xlsx')
         
