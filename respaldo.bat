@@ -9,15 +9,15 @@ echo ===========================
 
 echo ATENCION: Asegurese de tener conexion a internet...
 Pause
-echo
+echo  
 git status
-echo
+echo   
 git add .
 echo ==============================================
 git commit -m "Base de datos respaldada exitosamente"
 echo ==============================================
 git push
-echo
+echo   
 echo ==============================================
 echo Base de datos ha sido respaldada exitosamente.
 echo ==============================================
