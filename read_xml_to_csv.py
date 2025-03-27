@@ -225,14 +225,15 @@ def parse_xml(file_path):
                 # Extract values for each item
                 for item in line_items:
                     code = item.get('Codigo')
-                    # detalle = item.get('Detalle', '')
-    
+                    detalleRaw = item.get('Detalle', '')
+                    product_name = detalleRaw.split(';', 1)[0]
+                    
                     record = {
     
                         'NumeroLinea': item.get('NumeroLinea', ''),
                         'FacturaID': fc['FacturaID'],
                         'Codigo': item.get('Codigo', ''),
-                        'Detalle':item.get('Detalle', ''),
+                        'Detalle':product_name,
                         'ImpuestoPorcentaje': float(item.get('Impuesto', {}).get('Tarifa', '')),
                         'NaturalezaDescuento': item.get('Descuento', {}).get('NaturalezaDescuento', ''),
                         'CodImpuesto': int(item.get('Impuesto', {}).get('Codigo', '')),
