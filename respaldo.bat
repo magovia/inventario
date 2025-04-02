@@ -14,7 +14,7 @@ git status
 echo   
 git add .
 echo ==============================================
-git commit -m "Base de datos respaldada exitosamente"
+git commit -m "Distleimi:Base de datos respaldada exitosamente"
 echo ==============================================
 git push
 echo   
